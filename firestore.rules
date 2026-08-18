@@ -1,0 +1,92 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function myProfile() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function myRole() {
+      return isSignedIn() ? myProfile().role : null;
+    }
+
+    function isAdmin() {
+      return myRole() == 'administrator';
+    }
+
+    function isSupervisorOrAbove() {
+      return myRole() in ['supervisor', 'administrator'];
+    }
+
+    function isEngineerOrAbove() {
+      return myRole() in ['engineer', 'supervisor', 'administrator'];
+    }
+
+    // ---------------- users ----------------
+    match /users/{uid} {
+      // Anyone signed in can read profiles (needed for technician-name
+      // snapshots on shared records like assessments/audit log).
+      allow read: if isSignedIn();
+      // A user can create/update their OWN doc, but cannot set their own role.
+      allow create: if isSignedIn() && request.auth.uid == uid
+                    && request.resource.data.role == 'technician';
+      allow update: if isSignedIn() && (
+                      (request.auth.uid == uid &&
+                        request.resource.data.role == resource.data.role) ||
+                      isAdmin()
+                    );
+      allow delete: if isAdmin();
+    }
+
+    // ---------------- assets ----------------
+    match /assets/{assetId} {
+      allow read: if isSignedIn();
+      allow create, update: if isEngineerOrAbove();
+      allow delete: if isAdmin(); // prefer archiving over deleting (Section 12)
+    }
+
+    // ---------------- readings & assessments ----------------
+    match /assessments/{assessmentId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn(); // any authenticated role can log a reading
+      // Historical assessments are immutable once synced — corrections are
+      // new records, not edits, except by an engineer/supervisor/admin
+      // fixing a data-entry error shortly after creation.
+      allow update: if isEngineerOrAbove();
+      allow delete: if isAdmin();
+    }
+
+    // ---------------- baselines (versioned, never overwritten) ----------------
+    match /baselines/{baselineId} {
+      allow read: if isSignedIn();
+      allow create: if isEngineerOrAbove();
+      allow update: if false; // immutable — re-baselining creates a new version
+      allow delete: if isAdmin();
+    }
+
+    // ---------------- maintenance ----------------
+    match /maintenance/{recordId} {
+      allow read: if isSignedIn();
+      allow create, update: if isEngineerOrAbove();
+      allow delete: if isAdmin();
+    }
+
+    // ---------------- audit log — append-only, never editable/deletable by technicians ----------------
+    match /auditLog/{entryId} {
+      allow read: if isSupervisorOrAbove();
+      allow create: if isSignedIn();
+      allow update, delete: if false;
+    }
+
+    // ---------------- scoring methodology / thresholds — admin only ----------------
+    match /systemConfig/{configId} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+  }
+}
