@@ -7,18 +7,19 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.svg'],
+      includeAssets: ['favicon.svg', 'favicon-32.png', 'favicon-16.png', 'apple-touch-icon.png'],
       manifest: {
-        name: 'Ijimari Degradation Index',
-        short_name: 'IDI',
-        description: 'Intelligent Condition Monitoring for Rotating Equipment',
-        theme_color: '#1a1f26',
-        background_color: '#1a1f26',
+        name: 'Thomarg Technologies — IDI Calculator',
+        short_name: 'IDI Calculator',
+        description: 'Engineering calculations, simplified — by Thomarg Technologies',
+        theme_color: '#0B1F2B',
+        background_color: '#14181e',
         display: 'standalone',
         start_url: '/',
         icons: [
           { src: '/icon-192.png', sizes: '192x192', type: 'image/png' },
-          { src: '/icon-512.png', sizes: '512x512', type: 'image/png' }
+          { src: '/icon-512.png', sizes: '512x512', type: 'image/png' },
+          { src: '/icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' }
         ]
       },
       workbox: {

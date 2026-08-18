@@ -1,0 +1,38 @@
+<svg width="900" height="260" viewBox="0 0 900 260" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="circuitGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4FD1C5"/>
+      <stop offset="100%" stop-color="#2FA5A5"/>
+    </linearGradient>
+  </defs>
+
+  <!-- ============ MARK ============ -->
+  <g transform="translate(20,20)">
+    <polygon points="110,4 206,58 206,166 110,220 14,166 14,58"
+             fill="none" stroke="#eef1f4" stroke-width="12" stroke-linejoin="round"/>
+
+    <g stroke="#8b96a3" stroke-width="7" stroke-linecap="round">
+      <line x1="60" y1="76" x2="110" y2="112"/>
+      <line x1="160" y1="76" x2="110" y2="112"/>
+      <line x1="60" y1="148" x2="110" y2="112"/>
+      <line x1="160" y1="148" x2="110" y2="112"/>
+    </g>
+
+    <g stroke="url(#circuitGrad)" stroke-width="6" fill="none" stroke-linecap="round">
+      <path d="M110,112 L110,60"/>
+      <path d="M110,112 L152,138"/>
+      <path d="M110,112 L68,138"/>
+    </g>
+    <circle cx="110" cy="60" r="9" fill="#4FD1C5"/>
+    <circle cx="152" cy="138" r="9" fill="#4FD1C5"/>
+    <circle cx="68" cy="138" r="9" fill="#4FD1C5"/>
+    <circle cx="110" cy="112" r="12" fill="#14181e" stroke="#4FD1C5" stroke-width="4"/>
+  </g>
+
+  <!-- ============ WORDMARK ============ -->
+  <g transform="translate(270,0)">
+    <text x="0" y="118" font-family="'Segoe UI', Arial, sans-serif" font-size="64" font-weight="700" fill="#eef1f4">Thomarg</text>
+    <text x="0" y="168" font-family="'Segoe UI', Arial, sans-serif" font-size="30" font-weight="500" letter-spacing="6" fill="#4FD1C5">TECHNOLOGIES</text>
+    <text x="0" y="204" font-family="'Segoe UI', Arial, sans-serif" font-size="19" font-style="italic" fill="#8b96a3">Solving engineering problems with technology and AI</text>
+  </g>
+</svg>

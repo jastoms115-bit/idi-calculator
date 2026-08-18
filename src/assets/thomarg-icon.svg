@@ -1,0 +1,39 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#164055"/>
+      <stop offset="100%" stop-color="#0B1F2B"/>
+    </linearGradient>
+    <linearGradient id="circuitGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4FD1C5"/>
+      <stop offset="100%" stop-color="#2FA5A5"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="512" height="512" rx="96" fill="url(#bg)"/>
+
+  <g transform="translate(56,46)">
+    <!-- Outer hexagon: engineering / structural frame -->
+    <polygon points="200,8 372,105 372,300 200,397 28,300 28,105"
+             fill="none" stroke="#E9F3F5" stroke-width="22" stroke-linejoin="round"/>
+
+    <!-- Inner structural truss lines -->
+    <g stroke="#E9F3F5" stroke-width="13" stroke-linecap="round" opacity="0.9">
+      <line x1="108" y1="138" x2="200" y2="202"/>
+      <line x1="292" y1="138" x2="200" y2="202"/>
+      <line x1="108" y1="268" x2="200" y2="202"/>
+      <line x1="292" y1="268" x2="200" y2="202"/>
+    </g>
+
+    <!-- Circuit / AI motif -->
+    <g stroke="url(#circuitGrad)" stroke-width="11" fill="none" stroke-linecap="round">
+      <path d="M200,202 L200,108"/>
+      <path d="M200,202 L276,250"/>
+      <path d="M200,202 L124,250"/>
+    </g>
+    <circle cx="200" cy="108" r="16" fill="#4FD1C5"/>
+    <circle cx="276" cy="250" r="16" fill="#4FD1C5"/>
+    <circle cx="124" cy="250" r="16" fill="#4FD1C5"/>
+    <circle cx="200" cy="202" r="22" fill="#0B1F2B" stroke="#4FD1C5" stroke-width="7"/>
+  </g>
+</svg>

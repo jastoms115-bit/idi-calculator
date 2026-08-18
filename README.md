@@ -1,6 +1,10 @@
 # IDI — Ijimari Degradation Index
 
-Field-deployable PWA for pump/motor condition monitoring. React + Vite + Firebase.
+Field-deployable PWA for pump/motor condition monitoring. React + Vite + Firebase. First product of **Thomarg Technologies**.
+
+## Branding
+
+App icon, favicon, and PWA manifest icons are Thomarg Technologies' mark (`public/`, sourced from `src/assets/`). The welcome flow (`src/pages/Welcome.jsx`) is a two-step splash: a Thomarg Technologies company intro, then the IDI Calculator product intro with Get Started/Sign In — matching the "company first, then product" onboarding called for in the improvement plan. Swap `public/icon-*.png`, `public/favicon*`, and the two SVGs in `src/assets/` if the logo changes; nothing else references old filenames.
 
 ## What's built
 

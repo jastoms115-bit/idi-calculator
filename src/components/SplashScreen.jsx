@@ -1,7 +1,7 @@
 export default function SplashScreen() {
   return (
     <div className="splash">
-      <div className="splash-mark">IDI</div>
+      <img src="/icon-192.png" alt="" className="splash-mark-icon" />
       <div className="spinner" role="status" aria-label="Loading" />
     </div>
   )

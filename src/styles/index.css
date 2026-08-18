@@ -357,12 +357,10 @@ a {
   gap: 16px;
 }
 
-.splash-mark {
-  font-family: var(--font-display);
-  font-size: 28px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  color: var(--amber-500);
+.splash-mark-icon {
+  width: 88px;
+  height: 88px;
+  border-radius: 18px;
 }
 
 .spinner {
