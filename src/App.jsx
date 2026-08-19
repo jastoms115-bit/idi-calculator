@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { HashRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from './contexts/AuthContext'
 import Welcome from './pages/Welcome'
 import Onboarding from './pages/Onboarding'
@@ -78,7 +78,7 @@ function RequireUnverified({ children }) {
 export default function App() {
   return (
     <AuthProvider>
-      <BrowserRouter>
+      <HashRouter>
         <Gate>
           <ConnectionBanner />
           <Routes>
@@ -258,7 +258,7 @@ export default function App() {
             <Route path="*" element={<Navigate to="/welcome" replace />} />
           </Routes>
         </Gate>
-      </BrowserRouter>
+      </HashRouter>
     </AuthProvider>
   )
 }
