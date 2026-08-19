@@ -191,11 +191,18 @@ function RolesDetail() {
 
 function OfflineDetail() {
   return (
-    <p>
-      Readings, asset edits, and maintenance records save to this device instantly and sync to the server automatically
-      once you're back online — there is no manual upload step. Check the Sync Centre tab to see what's still pending.
-      Photo uploads are the one exception: they need a live connection and will show an error to retry if taken offline.
-    </p>
+    <>
+      <p style={{ marginBottom: 8 }}>
+        Readings, asset edits, and maintenance records save to this device instantly and sync to the server automatically
+        once you're back online — there is no manual upload step. Check the Sync Centre tab to see what's still pending.
+        Photo uploads are the one exception: they need a live connection and will show an error to retry if taken offline.
+      </p>
+      <p>
+        Signing in still needs a connection the very first time on a device — after that, you stay signed in and the
+        app works fully offline, even with zero signal. Connect once before heading to a remote site, and you're covered
+        for the rest of the visit.
+      </p>
+    </>
   )
 }
 

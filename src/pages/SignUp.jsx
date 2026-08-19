@@ -17,10 +17,10 @@ export default function SignUp() {
     try {
       await signUp(email.trim(), password)
       // No manual navigate needed for most cases — RedirectIfAuthed /
-      // RequireAuthLoose route guards react to the new auth state and
-      // send the user to Complete Profile automatically. We navigate
+      // RequireUnverified route guards react to the new auth state and
+      // send the user to Verify Email automatically. We navigate
       // explicitly too as a fallback in case guards haven't re-rendered yet.
-      navigate('/complete-profile', { replace: true })
+      navigate('/verify-email', { replace: true })
     } catch (err) {
       setError(err.message)
       setLoading(false)

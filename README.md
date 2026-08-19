@@ -6,6 +6,18 @@ Field-deployable PWA for pump/motor condition monitoring. React + Vite + Firebas
 
 App icon, favicon, and PWA manifest icons are Thomarg Technologies' mark (`public/`, sourced from `src/assets/`). The welcome flow (`src/pages/Welcome.jsx`) is a two-step splash: a Thomarg Technologies company intro, then the IDI Calculator product intro with Get Started/Sign In — matching the "company first, then product" onboarding called for in the improvement plan. Swap `public/icon-*.png`, `public/favicon*`, and the two SVGs in `src/assets/` if the logo changes; nothing else references old filenames.
 
+## Android app (Capacitor)
+
+The app is packaged as a native Android APK via [Capacitor](https://capacitorjs.com), built entirely in GitHub Actions — no Android Studio, no local Node, nothing installed on your machine. `capacitor.config.json` has no `server.url`, so the APK bundles the built app locally and never loads Netlify or shows any GitHub/Netlify branding to the user, per the improvement plan's requirement.
+
+**One-time setup (already done for this build):**
+- A release signing keystore was generated (`thomarg-idi-release.keystore`) — this is the identity of the app; losing it means future updates can't be installed over the existing app, so it must be kept safe and never regenerated casually.
+- Its base64-encoded contents and its passwords need to be added as GitHub repo secrets (Settings → Secrets and variables → Actions → New repository secret): `ANDROID_KEYSTORE_BASE64`, `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS` (`thomarg-idi`), `ANDROID_KEY_PASSWORD`.
+
+**To build an APK:** GitHub repo → Actions tab → "Build Android APK" workflow → Run workflow. Takes a few minutes; the signed `app-release.apk` appears as a downloadable artifact on the completed run.
+
+**How it works:** `android/` is never committed — `.github/workflows/android-build.yml` runs `npx cap add android` fresh each time (bootstrapped from `capacitor.config.json` + the Vite build output), generates icons/splash from `resources/icon.png` and `resources/splash.png` via `@capacitor/assets`, then signs the release build using the keystore secret. Nothing Android-specific needs to be kept in sync by hand — the web app (`src/`) stays the single source of truth.
+
 ## What's built
 
 - **Auth (Section 2 of the build prompt), done properly:** sign-up, sign-in, password reset, friendly error messages for every Firebase error code, and — the actual fix for the original bug — routing gated on `onAuthStateChanged` via an `authReady` flag (`src/contexts/AuthContext.jsx`, `src/App.jsx`), so the app never redirects based on a `null` `auth.currentUser` read before Firebase has restored the session.

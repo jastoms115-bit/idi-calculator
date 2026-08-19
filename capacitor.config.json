@@ -1,0 +1,9 @@
+{
+  "appId": "com.thomargtechnologies.idicalculator",
+  "appName": "IDI Calculator",
+  "webDir": "dist",
+  "backgroundColor": "#14181e",
+  "android": {
+    "backgroundColor": "#14181e"
+  }
+}

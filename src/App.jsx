@@ -4,9 +4,11 @@ import Welcome from './pages/Welcome'
 import Onboarding from './pages/Onboarding'
 import SignUp from './pages/SignUp'
 import SignIn from './pages/SignIn'
+import VerifyEmail from './pages/VerifyEmail'
 import CompleteProfile from './pages/CompleteProfile'
 import Dashboard from './pages/Dashboard'
 import SplashScreen from './components/SplashScreen'
+import ConnectionBanner from './components/ConnectionBanner'
 import AssetList from './pages/assets/AssetList'
 import AssetForm from './pages/assets/AssetForm'
 import AssetDetail from './pages/assets/AssetDetail'
@@ -18,6 +20,7 @@ import MaintenanceForm from './pages/maintenance/MaintenanceForm'
 import SyncCentre from './pages/SyncCentre'
 import AuditTrail from './pages/AuditTrail'
 import LearningCentre from './pages/LearningCentre'
+import About from './pages/About'
 import { isEngineerOrAbove, isSupervisorOrAbove } from './lib/roles'
 import { usePhotoQueueSync } from './hooks/usePhotoQueueSync'
 
@@ -33,8 +36,9 @@ function Gate({ children }) {
 }
 
 function RequireAuth({ children }) {
-  const { user, profile, profileLoading } = useAuth()
+  const { user, profile, profileLoading, emailVerified } = useAuth()
   if (!user) return <Navigate to="/welcome" replace />
+  if (!emailVerified) return <Navigate to="/verify-email" replace />
   if (profileLoading) return <SplashScreen />
   if (!profile?.profile_completed) return <Navigate to="/complete-profile" replace />
   return children
@@ -52,9 +56,22 @@ function RequireRole({ role, children }) {
 }
 
 function RedirectIfAuthed({ children }) {
-  const { user, profile } = useAuth()
+  const { user, profile, emailVerified } = useAuth()
+  if (user && !emailVerified) return <Navigate to="/verify-email" replace />
   if (user && profile?.profile_completed) return <Navigate to="/dashboard" replace />
   if (user && profile && !profile.profile_completed) return <Navigate to="/complete-profile" replace />
+  return children
+}
+
+// Guards /verify-email itself: needs a signed-in user, but must NOT bounce
+// away just because emailVerified is still false — that's the point of the
+// page. Once verified, sends them on to complete-profile/dashboard same as
+// RedirectIfAuthed does.
+function RequireUnverified({ children }) {
+  const { user, profile, emailVerified } = useAuth()
+  if (!user) return <Navigate to="/welcome" replace />
+  if (emailVerified && profile?.profile_completed) return <Navigate to="/dashboard" replace />
+  if (emailVerified && profile && !profile.profile_completed) return <Navigate to="/complete-profile" replace />
   return children
 }
 
@@ -63,6 +80,7 @@ export default function App() {
     <AuthProvider>
       <BrowserRouter>
         <Gate>
+          <ConnectionBanner />
           <Routes>
             <Route path="/" element={<Navigate to="/welcome" replace />} />
             <Route
@@ -88,6 +106,14 @@ export default function App() {
                 <RedirectIfAuthed>
                   <SignIn />
                 </RedirectIfAuthed>
+              }
+            />
+            <Route
+              path="/verify-email"
+              element={
+                <RequireUnverified>
+                  <VerifyEmail />
+                </RequireUnverified>
               }
             />
             <Route
@@ -220,6 +246,14 @@ export default function App() {
                 </RequireAuth>
               }
             />
+            <Route
+              path="/about"
+              element={
+                <RequireAuth>
+                  <About />
+                </RequireAuth>
+              }
+            />
 
             <Route path="*" element={<Navigate to="/welcome" replace />} />
           </Routes>
@@ -232,8 +266,9 @@ export default function App() {
 // Complete Profile needs a signed-in user but must NOT redirect away just
 // because profile_completed is still false — that's the whole point of the page.
 function RequireAuthLoose({ children }) {
-  const { user, profile, profileLoading } = useAuth()
+  const { user, profile, profileLoading, emailVerified } = useAuth()
   if (!user) return <Navigate to="/welcome" replace />
+  if (!emailVerified) return <Navigate to="/verify-email" replace />
   if (profileLoading) return <SplashScreen />
   if (profile?.profile_completed) return <Navigate to="/dashboard" replace />
   return children

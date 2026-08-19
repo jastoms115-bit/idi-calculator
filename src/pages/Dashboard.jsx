@@ -56,9 +56,14 @@ export default function Dashboard() {
             </h1>
             <p style={{ marginTop: 4 }}>Ready for your next equipment assessment?</p>
           </div>
-          <button className="btn-link" onClick={signOut} type="button">
-            Sign out
-          </button>
+          <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
+            <Link to="/about" className="btn-link">
+              About
+            </Link>
+            <button className="btn-link" onClick={signOut} type="button">
+              Sign out
+            </button>
+          </div>
         </div>
 
         {loadError && <div className="banner banner-error" style={{ marginTop: 16 }}>{loadError}</div>}

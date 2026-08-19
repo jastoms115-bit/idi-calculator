@@ -4,6 +4,8 @@ import {
   signInWithEmailAndPassword,
   signOut as firebaseSignOut,
   sendPasswordResetEmail,
+  sendEmailVerification,
+  reload,
   onAuthStateChanged
 } from 'firebase/auth'
 import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore'
@@ -45,6 +47,10 @@ export function AuthProvider({ children }) {
   // even with a valid restored session.
   const [authReady, setAuthReady] = useState(false)
   const [profileLoading, setProfileLoading] = useState(false)
+  // Mirrors firebaseUser.emailVerified as a separate primitive so guards
+  // re-render on change — the user object itself only reflects a fresh
+  // verification status after an explicit reload() (see checkEmailVerified).
+  const [emailVerified, setEmailVerified] = useState(false)
 
   const loadProfile = useCallback(async (uid) => {
     setProfileLoading(true)
@@ -62,6 +68,7 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       setUser(firebaseUser)
+      setEmailVerified(firebaseUser?.emailVerified ?? false)
       if (firebaseUser) {
         await loadProfile(firebaseUser.uid)
       } else {
@@ -94,12 +101,38 @@ export function AuthProvider({ children }) {
         created_at: serverTimestamp(),
         updated_at: serverTimestamp()
       })
+      await sendEmailVerification(cred.user)
       await loadProfile(cred.user.uid)
       return cred.user
     } catch (err) {
       throw new Error(friendlyAuthError(err))
     }
   }, [loadProfile])
+
+  const resendVerificationEmail = useCallback(async () => {
+    if (!auth.currentUser) return
+    try {
+      await sendEmailVerification(auth.currentUser)
+    } catch (err) {
+      throw new Error(friendlyAuthError(err))
+    }
+  }, [])
+
+  // Firebase doesn't push verification status to the client in real time —
+  // the user has to actually reload their auth token to pick up a change
+  // made by clicking the email link. Call this from a "I've verified"
+  // button rather than polling.
+  const checkEmailVerified = useCallback(async () => {
+    if (!auth.currentUser) return false
+    try {
+      await reload(auth.currentUser)
+      const verified = auth.currentUser.emailVerified
+      setEmailVerified(verified)
+      return verified
+    } catch (err) {
+      throw new Error(friendlyAuthError(err))
+    }
+  }, [])
 
   const signIn = useCallback(async (email, password) => {
     try {
@@ -131,11 +164,14 @@ export function AuthProvider({ children }) {
     profile,
     authReady,
     profileLoading,
+    emailVerified,
     signUp,
     signIn,
     signOut: signOutUser,
     resetPassword,
-    refreshProfile
+    refreshProfile,
+    resendVerificationEmail,
+    checkEmailVerified
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
