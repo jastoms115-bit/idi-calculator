@@ -1,27 +1,27 @@
 /* ============================================================ IDI DESIGN TOKENS Instrument-panel register: this reads as calibrated field equipment, not a startup landing page. Condition-band colors are functional (used consistently for score data everywhere) not decorative accents. ============================================================ */
 
 :root {
-  /* Surface */
-  --graphite-950: #14181e;
-  --graphite-900: #1a1f26;
-  --panel-800: #232a33;
-  --panel-700: #2c3540;
-  --line-600: #3a4552;
+  /* Surface — deep navy, IoT dashboard register */
+  --graphite-950: #090d16;
+  --graphite-900: #0d1220;
+  --panel-800: rgba(255, 255, 255, 0.045);
+  --panel-700: rgba(255, 255, 255, 0.075);
+  --line-600: rgba(103, 232, 249, 0.16);
 
   /* Text */
-  --text-primary: #eef1f4;
-  --text-muted: #8b96a3;
+  --text-primary: #eef3f8;
+  --text-muted: #8b96a8;
   --text-faint: #5c6773;
 
-  /* Signal */
-  --amber-500: #d98e2a;
-  --amber-400: #e6a648;
+  /* Signal — neon cyan primary accent (was amber; token name kept for compatibility with existing usages across the app) */
+  --amber-500: #22d3ee;
+  --amber-400: #67e8f9;
 
   /* Condition bands — used consistently for every score, badge, chart */
-  --healthy: #4a9d6f;
-  --watch: #d9b23c;
-  --caution: #d9772a;
-  --critical: #c9503f;
+  --healthy: #34d399;
+  --watch: #e8c752;
+  --caution: #e8923f;
+  --critical: #f0555a;
   --unknown: #5c6773;
 
   /* Type */
@@ -31,11 +31,12 @@
 
   --radius: 18px;
   --radius-sm: 12px;
-  --radius-lg: 24px;
+  --radius-lg: 22px;
 
-  --shadow-card: 0 8px 24px rgba(0, 0, 0, 0.35), 0 2px 6px rgba(0, 0, 0, 0.25);
-  --shadow-soft: 0 4px 14px rgba(0, 0, 0, 0.28);
-  --shadow-glow: 0 8px 20px rgba(217, 142, 42, 0.28);
+  --shadow-card: 0 10px 30px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(103, 232, 249, 0.06) inset;
+  --shadow-soft: 0 6px 18px rgba(0, 0, 0, 0.45);
+  --shadow-glow: 0 8px 24px rgba(34, 211, 238, 0.3);
 }
 
 * {
@@ -50,11 +51,21 @@ body,
 
 body {
   margin: 0;
-  background: var(--graphite-900);
+  background: radial-gradient(
+      ellipse 800px 500px at 20% -10%,
+      rgba(34, 211, 238, 0.08),
+      transparent
+    ),
+    radial-gradient(
+      ellipse 600px 400px at 100% 0%,
+      rgba(52, 211, 153, 0.05),
+      transparent
+    ),
+    var(--graphite-950);
   color: var(--text-primary);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
-  background-color: var(--graphite-900);
+  min-height: 100%;
 }
 
 h1,
@@ -116,12 +127,10 @@ a {
 
 .panel {
   position: relative;
-  background: linear-gradient(
-    165deg,
-    var(--panel-700) 0%,
-    var(--panel-800) 55%
-  );
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: var(--panel-800);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--line-600);
   border-radius: var(--radius-lg);
   padding: 20px;
   box-shadow: var(--shadow-card);
@@ -386,12 +395,10 @@ a {
 }
 
 .summary-card {
-  background: linear-gradient(
-    165deg,
-    var(--panel-700) 0%,
-    var(--panel-800) 60%
-  );
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: var(--panel-800);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--line-600);
   border-radius: var(--radius);
   padding: 16px;
   box-shadow: var(--shadow-soft);
@@ -421,6 +428,58 @@ a {
   display: block;
 }
 
+.summary-card::before {
+  content: "";
+  display: block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-bottom: 10px;
+  background: var(--amber-500);
+  box-shadow: 0 0 12px currentColor;
+}
+
+.summary-card--total::before {
+  background: var(--amber-500);
+  color: var(--amber-500);
+}
+.summary-card--healthy::before {
+  background: var(--healthy);
+  color: var(--healthy);
+}
+.summary-card--watch::before {
+  background: var(--watch);
+  color: var(--watch);
+}
+.summary-card--caution::before {
+  background: var(--caution);
+  color: var(--caution);
+}
+.summary-card--critical::before {
+  background: var(--critical);
+  color: var(--critical);
+}
+.summary-card--pendingSync::before {
+  background: #4a90d9;
+  color: #4a90d9;
+}
+
+.summary-card--healthy .count {
+  color: var(--healthy);
+}
+.summary-card--watch .count {
+  color: var(--watch);
+}
+.summary-card--caution .count {
+  color: var(--caution);
+}
+.summary-card--critical .count {
+  color: var(--critical);
+}
+.summary-card--pendingSync .count {
+  color: #4a90d9;
+}
+
 /* ---------------- Bottom tab navigation ---------------- */
 
 .tab-nav {
@@ -431,10 +490,10 @@ a {
   max-width: 452px;
   margin: 0 auto;
   display: flex;
-  background: rgba(35, 42, 51, 0.92);
+  background: rgba(13, 18, 32, 0.85);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--line-600);
   border-radius: 22px;
   box-shadow: var(--shadow-card);
   z-index: 50;
@@ -902,4 +961,4 @@ a {
 .empty-state {
   text-align: center;
   margin-top: 16px;
-}
+    }
