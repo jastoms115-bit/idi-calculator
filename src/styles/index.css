@@ -1,10 +1,4 @@
-/* ============================================================
-   IDI DESIGN TOKENS
-   Instrument-panel register: this reads as calibrated field
-   equipment, not a startup landing page. Condition-band colors
-   are functional (used consistently for score data everywhere)
-   not decorative accents.
-   ============================================================ */
+/* ============================================================ IDI DESIGN TOKENS Instrument-panel register: this reads as calibrated field equipment, not a startup landing page. Condition-band colors are functional (used consistently for score data everywhere) not decorative accents. ============================================================ */
 
 :root {
   /* Surface */
@@ -31,11 +25,17 @@
   --unknown: #5c6773;
 
   /* Type */
-  --font-display: 'Space Grotesk', system-ui, sans-serif;
-  --font-body: 'Inter', system-ui, sans-serif;
-  --font-mono: 'IBM Plex Mono', 'SFMono-Regular', monospace;
+  --font-display: "Space Grotesk", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", "SFMono-Regular", monospace;
 
-  --radius: 6px;
+  --radius: 18px;
+  --radius-sm: 12px;
+  --radius-lg: 24px;
+
+  --shadow-card: 0 8px 24px rgba(0, 0, 0, 0.35), 0 2px 6px rgba(0, 0, 0, 0.25);
+  --shadow-soft: 0 4px 14px rgba(0, 0, 0, 0.28);
+  --shadow-glow: 0 8px 20px rgba(217, 142, 42, 0.28);
 }
 
 * {
@@ -54,24 +54,12 @@ body {
   color: var(--text-primary);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
-  background-image:
-    linear-gradient(var(--line-600) 1px, transparent 1px),
-    linear-gradient(90deg, var(--line-600) 1px, transparent 1px);
-  background-size: 48px 48px;
-  background-attachment: fixed;
   background-color: var(--graphite-900);
 }
 
-/* Subtle grid reads as instrumentation, not decoration — dial it back on panels */
-.panel,
-.field,
-input,
-select,
-textarea {
-  background-image: none;
-}
-
-h1, h2, h3 {
+h1,
+h2,
+h3 {
   font-family: var(--font-display);
   font-weight: 600;
   margin: 0;
@@ -100,7 +88,9 @@ a {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
@@ -122,41 +112,19 @@ a {
   min-height: 100vh;
 }
 
-/* ---------------- Instrument panel card ----------------
-   Signature element: corner tick marks, like a calibration
-   bezel, on every content panel. Quiet, consistent, not
-   repeated anywhere else in the UI. */
+/* ---------------- Card ---------------- */
 
 .panel {
   position: relative;
-  background: var(--panel-800);
-  border: 1px solid var(--line-600);
-  border-radius: var(--radius);
+  background: linear-gradient(
+    165deg,
+    var(--panel-700) 0%,
+    var(--panel-800) 55%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-lg);
   padding: 20px;
-}
-
-.panel::before,
-.panel::after {
-  content: '';
-  position: absolute;
-  width: 8px;
-  height: 8px;
-  border: 1px solid var(--amber-500);
-  opacity: 0.6;
-}
-
-.panel::before {
-  top: -1px;
-  left: -1px;
-  border-right: none;
-  border-bottom: none;
-}
-
-.panel::after {
-  bottom: -1px;
-  right: -1px;
-  border-left: none;
-  border-top: none;
+  box-shadow: var(--shadow-card);
 }
 
 /* ---------------- Type utilities ---------------- */
@@ -200,17 +168,31 @@ a {
 .field textarea {
   background: var(--graphite-950);
   border: 1px solid var(--line-600);
-  border-radius: var(--radius);
-  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  padding: 13px 16px;
   color: var(--text-primary);
   font-size: 15px;
   font-family: var(--font-body);
   width: 100%;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  outline: none;
+  border-color: var(--amber-500);
+  box-shadow: 0 0 0 3px rgba(217, 142, 42, 0.15);
 }
 
 .field select {
   appearance: none;
-  background-image: linear-gradient(45deg, transparent 50%, var(--text-muted) 50%), linear-gradient(135deg, var(--text-muted) 50%, transparent 50%);
+  background-image: linear-gradient(
+      45deg,
+      transparent 50%,
+      var(--text-muted) 50%
+    ),
+    linear-gradient(135deg, var(--text-muted) 50%, transparent 50%);
   background-position: calc(100% - 18px) center, calc(100% - 13px) center;
   background-size: 5px 5px, 5px 5px;
   background-repeat: no-repeat;
@@ -258,16 +240,16 @@ a {
   justify-content: center;
   gap: 8px;
   border: none;
-  border-radius: var(--radius);
-  padding: 14px 20px;
+  border-radius: var(--radius-sm);
+  padding: 15px 20px;
   font-size: 15px;
   font-weight: 600;
   width: 100%;
-  transition: opacity 0.15s ease, transform 0.1s ease;
+  transition: opacity 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
 }
 
 .btn:active {
-  transform: scale(0.99);
+  transform: scale(0.97);
 }
 
 .btn:disabled {
@@ -276,8 +258,9 @@ a {
 }
 
 .btn-primary {
-  background: var(--amber-500);
+  background: linear-gradient(135deg, var(--amber-400), var(--amber-500));
   color: var(--graphite-950);
+  box-shadow: var(--shadow-glow);
 }
 
 .btn-primary:hover:not(:disabled) {
@@ -285,9 +268,9 @@ a {
 }
 
 .btn-secondary {
-  background: transparent;
+  background: var(--panel-700);
   color: var(--text-primary);
-  border: 1px solid var(--line-600);
+  border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .btn-secondary:hover:not(:disabled) {
@@ -307,8 +290,8 @@ a {
 /* ---------------- Banners / feedback ---------------- */
 
 .banner {
-  border-radius: var(--radius);
-  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  padding: 13px 16px;
   font-size: 14px;
   margin-bottom: 16px;
   border: 1px solid;
@@ -336,15 +319,30 @@ a {
   font-size: 11px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  padding: 4px 8px;
-  border-radius: 3px;
+  padding: 5px 10px;
+  border-radius: 999px;
 }
 
-.badge-healthy { background: rgba(74, 157, 111, 0.15); color: var(--healthy); }
-.badge-watch { background: rgba(217, 178, 60, 0.15); color: var(--watch); }
-.badge-caution { background: rgba(217, 119, 42, 0.15); color: var(--caution); }
-.badge-critical { background: rgba(201, 80, 63, 0.15); color: var(--critical); }
-.badge-unknown { background: rgba(92, 103, 115, 0.15); color: var(--text-muted); }
+.badge-healthy {
+  background: rgba(74, 157, 111, 0.15);
+  color: var(--healthy);
+}
+.badge-watch {
+  background: rgba(217, 178, 60, 0.15);
+  color: var(--watch);
+}
+.badge-caution {
+  background: rgba(217, 119, 42, 0.15);
+  color: var(--caution);
+}
+.badge-critical {
+  background: rgba(201, 80, 63, 0.15);
+  color: var(--critical);
+}
+.badge-unknown {
+  background: rgba(92, 103, 115, 0.15);
+  color: var(--text-muted);
+}
 
 /* ---------------- Splash / loading ---------------- */
 
@@ -373,7 +371,9 @@ a {
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* ---------------- Dashboard summary grid ---------------- */
@@ -386,10 +386,20 @@ a {
 }
 
 .summary-card {
-  background: var(--panel-800);
-  border: 1px solid var(--line-600);
+  background: linear-gradient(
+    165deg,
+    var(--panel-700) 0%,
+    var(--panel-800) 60%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: var(--radius);
-  padding: 14px;
+  padding: 16px;
+  box-shadow: var(--shadow-soft);
+  transition: transform 0.12s ease;
+}
+
+.summary-card:active {
+  transform: scale(0.97);
 }
 
 .summary-card .count {
@@ -415,14 +425,18 @@ a {
 
 .tab-nav {
   position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  max-width: 480px;
+  bottom: 14px;
+  left: 14px;
+  right: 14px;
+  max-width: 452px;
   margin: 0 auto;
   display: flex;
-  background: var(--panel-800);
-  border-top: 1px solid var(--line-600);
+  background: rgba(35, 42, 51, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 22px;
+  box-shadow: var(--shadow-card);
   z-index: 50;
 }
 
@@ -431,13 +445,14 @@ a {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2px;
-  padding: 10px 4px 8px;
+  gap: 3px;
+  padding: 12px 4px 10px;
   color: var(--text-faint);
   font-size: 10px;
   font-family: var(--font-mono);
   letter-spacing: 0.04em;
   text-transform: uppercase;
+  transition: color 0.15s ease;
 }
 
 .tab-nav-item.active {
@@ -445,11 +460,11 @@ a {
 }
 
 .tab-nav-icon {
-  font-size: 16px;
+  font-size: 17px;
 }
 
 .screen--with-nav {
-  padding-bottom: 88px;
+  padding-bottom: 100px;
 }
 
 /* ---------------- Page header / quick actions ---------------- */
@@ -650,9 +665,18 @@ a {
   white-space: nowrap;
 }
 
-.status-open { background: rgba(217, 178, 60, 0.15); color: var(--watch); }
-.status-in_progress { background: rgba(217, 142, 42, 0.15); color: var(--amber-400); }
-.status-completed { background: rgba(74, 157, 111, 0.15); color: var(--healthy); }
+.status-open {
+  background: rgba(217, 178, 60, 0.15);
+  color: var(--watch);
+}
+.status-in_progress {
+  background: rgba(217, 142, 42, 0.15);
+  color: var(--amber-400);
+}
+.status-completed {
+  background: rgba(74, 157, 111, 0.15);
+  color: var(--healthy);
+}
 
 /* ---------------- Breakdown lists (score sub-indices) ---------------- */
 
@@ -803,8 +827,12 @@ a {
 
 /* ---------------- Sync status ---------------- */
 
-.sync-status-online { border-color: var(--healthy); }
-.sync-status-offline { border-color: var(--caution); }
+.sync-status-online {
+  border-color: var(--healthy);
+}
+.sync-status-offline {
+  border-color: var(--caution);
+}
 
 /* ---------------- Global connection banner ---------------- */
 
