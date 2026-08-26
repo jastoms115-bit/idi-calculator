@@ -139,6 +139,8 @@ export function AuthProvider({ children }) {
       const cred = await signInWithEmailAndPassword(auth, email, password)
       return cred.user
     } catch (err) {
+      // TEMPORARY DEBUG — remove after diagnosing the Capacitor auth issue
+      alert('DEBUG: ' + err.code + ' | ' + err.message)
       throw new Error(friendlyAuthError(err))
     }
   }, [])
